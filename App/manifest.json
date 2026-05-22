@@ -1,0 +1,41 @@
+{
+  "name": "CMVida — Cristo Manantial de Vida",
+  "short_name": "CMVida",
+  "description": "App oficial de la Iglesia Cristo Manantial de Vida, Linares.",
+  "start_url": "./CMVidaAppcorrecto.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#c0392b",
+  "theme_color": "#001F54",
+  "lang": "es",
+  "categories": ["lifestyle", "social"],
+  "icons": [
+    { "src": "icons/icon-48.png",           "sizes": "48x48",     "type": "image/png" },
+    { "src": "icons/icon-72.png",           "sizes": "72x72",     "type": "image/png" },
+    { "src": "icons/icon-96.png",           "sizes": "96x96",     "type": "image/png" },
+    { "src": "icons/icon-128.png",          "sizes": "128x128",   "type": "image/png" },
+    { "src": "icons/icon-144.png",          "sizes": "144x144",   "type": "image/png" },
+    { "src": "icons/icon-192.png",          "sizes": "192x192",   "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-256.png",          "sizes": "256x256",   "type": "image/png" },
+    { "src": "icons/icon-384.png",          "sizes": "384x384",   "type": "image/png" },
+    { "src": "icons/icon-512.png",          "sizes": "512x512",   "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512",   "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Leer la Biblia",
+      "short_name": "Biblia",
+      "description": "Abre la Biblia Reina Valera 1960",
+      "url": "./CMVidaAppcorrecto.html#biblia",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Mis Notas",
+      "short_name": "Notas",
+      "description": "Abre tus notas personales",
+      "url": "./CMVidaAppcorrecto.html#notas",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ]
+}
