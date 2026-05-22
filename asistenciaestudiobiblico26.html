@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -927,7 +927,7 @@
         justifico ? seccionMotivo.classList.remove('d-none') : seccionMotivo.classList.add('d-none');
     }
 
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyJt2Y1ZuTYUQyH8F4VN_N54N3xs3cQauFv7wPmO7k-bGGQ5lwrknJZD85y2Oh4di3U/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxhrba186woHZPCS9aPxkLgbXtvmxMSXFBp98Oof4CmP9lCCW9N7cYVt0-y818k8CNb/exec';
 
     // Cargar datos desde Google Sheets al iniciar
     async function cargarDesdeSheetsYActualizar(filtroFecha) {
@@ -1558,14 +1558,22 @@
 
     // ===== TABS PRINCIPALES =====
     function mostrarTabPrincipal(tab) {
-        document.getElementById('panel-eb').style.display = tab === 'eb' ? 'block' : 'none';
-        document.getElementById('panel-ed').style.display = tab === 'ed' ? 'block' : 'none';
+        document.getElementById('panel-eb').style.display = 'none';
+        document.getElementById('panel-ed').style.display = 'none';
+        document.getElementById('panel-' + tab).style.display = 'block';
         document.getElementById('tab-eb').classList.toggle('active', tab === 'eb');
         document.getElementById('tab-ed').classList.toggle('active', tab === 'ed');
+        if (tab === 'ed') {
+            const edFecha = document.getElementById('edFecha');
+            if (!edFecha.value) {
+                const hoy = new Date();
+                edFecha.value = hoy.getFullYear() + '-' + String(hoy.getMonth()+1).padStart(2,'0') + '-' + String(hoy.getDate()).padStart(2,'0');
+            }
+        }
     }
 
     // ===== ESCUELA DOMINICAL =====
-    const SCRIPT_URL_ED = 'https://script.google.com/macros/s/AKfycbzEVMJ3wXcQVNwUBI5xhvpnvRWQBODgCiG9IA5jHovfD7LUMwrzkg9PP3FLKt702Pzl/exec';
+    const SCRIPT_URL_ED = 'https://script.google.com/macros/s/AKfycbxhrba186woHZPCS9aPxkLgbXtvmxMSXFBp98Oof4CmP9lCCW9N7cYVt0-y818k8CNb/exec';
 
     async function cargarEscuelaDominical() {
         const fecha = document.getElementById('edFecha').value;
@@ -1579,17 +1587,16 @@
         document.getElementById('edMetricas').style.display = 'none';
 
         try {
-            // Leer desde CSV público de Google Sheets
-            const resp = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vS35VUASwovi-CrRlqdLTWR69CoffoIfcb5p1UHymJ0vdU3I9qUIY4ZJvaKl3YKPrfFGVInoDCi-9v0/pub?gid=1120940739&single=true&output=csv');
-            const csvText = await resp.text();
-
-            // Parsear CSV
-            const lineas = csvText.trim().split('\n').slice(1); // saltar encabezado
-            const datos = lineas
-                .map(linea => {
-                    const cols = linea.split(',').map(c => c.replace(/^"|"$/g,'').trim());
-                    return { fecha:cols[0], clase:cols[1], alumno:cols[2], estado:cols[3], esMaestro:cols[4], maestro:cols[5] };
+            const resp = await fetch('https://script.google.com/macros/s/AKfycbxhrba186woHZPCS9aPxkLgbXtvmxMSXFBp98Oof4CmP9lCCW9N7cYVt0-y818k8CNb/exec?hoja=Escuela%20Dominical');
+            const rows = await resp.json();
+            const datos = rows.slice(1)
+                .map(r => {
+                    let f = String(r[0]||'').trim();
+                    if (f.includes('T')) f = f.split('T')[0];
+                    if (f.match(/^\d{2}\/\d{2}\/\d{4}$/)) { const [dd,mm,aa] = f.split('/'); f = aa+'-'+mm+'-'+dd; }
+                    return { fecha:f, clase:String(r[1]||'').trim(), alumno:String(r[2]||'').trim(), estado:String(r[3]||'').trim(), esMaestro:String(r[4]||'').trim(), maestro:String(r[5]||'').trim() };
                 })
+                .filter(r => r.fecha && r.alumno)
                 .filter(r => r.fecha === fecha)
                 .filter(r => !claseFilter || r.clase === claseFilter);
 
@@ -1675,7 +1682,7 @@
         const claseFilter = document.getElementById('edClase').value;
         if (!fecha) { alert('Selecciona una fecha primero.'); return; }
 
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS35VUASwovi-CrRlqdLTWR69CoffoIfcb5p1UHymJ0vdU3I9qUIY4ZJvaKl3YKPrfFGVInoDCi-9v0/pub?gid=1120940739&single=true&output=csv';
+        const CSV_URL = 'https://script.google.com/macros/s/AKfycbxhrba186woHZPCS9aPxkLgbXtvmxMSXFBp98Oof4CmP9lCCW9N7cYVt0-y818k8CNb/exec?hoja=Escuela%20Dominical';
 
         const resp = await fetch(CSV_URL);
         const csvText = await resp.text();
@@ -1947,14 +1954,13 @@
     }
 
     async function verificarAlertasED() {
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS35VUASwovi-CrRlqdLTWR69CoffoIfcb5p1UHymJ0vdU3I9qUIY4ZJvaKl3YKPrfFGVInoDCi-9v0/pub?gid=1120940739&single=true&output=csv';
         try {
-            const resp = await fetch(CSV_URL);
-            const csvText = await resp.text();
-            const lineas = csvText.trim().split('\n').slice(1);
-            const datos = lineas.map(linea => {
-                const cols = linea.split(',').map(c => c.replace(/^"|"$/g,'').trim());
-                return { fecha:cols[0], clase:cols[1], alumno:cols[2], estado:cols[3] };
+            const resp = await fetch('https://script.google.com/macros/s/AKfycbxhrba186woHZPCS9aPxkLgbXtvmxMSXFBp98Oof4CmP9lCCW9N7cYVt0-y818k8CNb/exec?hoja=Escuela%20Dominical');
+            const rows = await resp.json();
+            const datos = rows.slice(1).map(r => {
+                let f = String(r[0]||'').trim();
+                if (f.includes('T')) f = f.split('T')[0];
+                return { fecha:f, clase:String(r[1]||'').trim(), alumno:String(r[2]||'').trim(), estado:String(r[3]||'').trim() };
             }).filter(r => r.fecha && r.alumno);
 
             // Fechas únicas ordenadas
