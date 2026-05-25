@@ -293,22 +293,62 @@ html,body{height:100%;background:#E5E7EB;font-family:var(--font-sans),-apple-sys
 .yt-vid-title{font-size:.82rem;font-weight:700;color:var(--texto);}
 .yt-vid-date{font-size:.72rem;color:var(--texto2);margin-top:3px;}
 
-/* Noticias */
-.noticias-sec{padding:0 0 6px;background:var(--fondo);}
-.not-header{display:flex;justify-content:space-between;align-items:center;padding:14px 14px 8px;}
-.not-header h3{font-size:.88rem;font-weight:800;color:var(--texto);}
-.not-refresh{background:none;border:none;font-size:.8rem;color:var(--naranja);font-weight:600;cursor:pointer;padding:4px 8px;font-family:inherit;}
-.not-cats{display:flex;gap:6px;padding:0 12px 10px;overflow-x:auto;}
-.not-cat{padding:6px 14px;border-radius:20px;border:none;font-size:.72rem;font-weight:600;cursor:pointer;white-space:nowrap;background:var(--fondo);color:var(--texto2);transition:.15s;font-family:inherit;border:1px solid var(--borde);}
+/* Noticias — complete styles */
+.noticias-sec{padding:0 0 16px;background:var(--fondo);}
+
+/* Section header (blue gradient bar) */
+.not-header-bar{background:linear-gradient(180deg,var(--az1) 0%,var(--az2) 100%);padding:16px 14px;display:flex;align-items:center;justify-content:space-between;}
+.not-header-bar h2{font-size:1rem;font-weight:700;color:#fff;}
+.not-refresh{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:.72rem;font-weight:600;padding:5px 12px;border-radius:20px;cursor:pointer;font-family:inherit;transition:.15s;}
+.not-refresh:active{background:rgba(255,255,255,.25);}
+
+/* Category filter bar */
+.not-cats{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;scrollbar-width:none;background:#fff;border-bottom:1px solid var(--borde);position:sticky;top:0;z-index:10;}
+.not-cats::-webkit-scrollbar{display:none;}
+.not-cat{padding:6px 14px;border-radius:20px;border:1px solid var(--borde);font-size:.72rem;font-weight:600;cursor:pointer;white-space:nowrap;background:#fff;color:var(--texto2);transition:.15s;font-family:inherit;flex-shrink:0;}
+.not-cat:active{background:var(--fondo);}
 .not-cat.on{background:var(--naranja);color:#fff;border-color:var(--naranja);}
-.not-card{background:#fff;margin:0 12px 8px;border-radius:16px;box-shadow:var(--card-shadow);overflow:hidden;cursor:pointer;}
-.not-card-img{width:100%;height:120px;object-fit:cover;background:var(--fondo);}
-.not-card-body{padding:10px 12px 8px;}
-.not-card-title{font-size:.88rem;font-weight:700;color:var(--texto);line-height:1.3;margin-bottom:4px;}
-.not-card-desc{font-size:.76rem;color:var(--texto2);line-height:1.55;}
-.not-card-foot{display:flex;justify-content:space-between;padding:7px 12px;background:var(--fondo);}
+
+/* Cards container */
+.not-cards{padding:10px 0 4px;}
+
+/* Card shell */
+.not-card{background:#fff;margin:0 12px 10px;border-radius:16px;box-shadow:var(--card-shadow);overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.not-card:active{transform:scale(.985);box-shadow:0 2px 8px rgba(0,0,0,.06);}
+
+/* Image / emoji area */
+.not-card-img{width:100%;height:130px;background:var(--fondo);position:relative;overflow:hidden;flex-shrink:0;}
+.not-card-img img{width:100%;height:100%;object-fit:cover;display:block;}
+/* Emoji fallback when no image */
+.not-ico{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3rem;}
+/* Source badge (bottom-left of image) */
+.not-card-src{position:absolute;bottom:8px;left:10px;background:rgba(0,0,0,.52);color:rgba(255,255,255,.9);font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:8px;letter-spacing:.2px;white-space:nowrap;max-width:60%;overflow:hidden;text-overflow:ellipsis;}
+/* "Nuevo" badge (top-right of image) */
+.not-card-new{position:absolute;top:8px;right:8px;background:var(--naranja);color:#fff;font-size:.6rem;font-weight:800;padding:2px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:.3px;box-shadow:0 2px 6px rgba(255,90,31,.4);}
+
+/* Card body */
+.not-card-body{padding:10px 12px 6px;}
+/* Category pill */
+.not-card-cat{display:inline-block;font-size:.6rem;font-weight:700;padding:2px 9px;border-radius:9999px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;}
+.not-cat-insta{background:rgba(255,90,31,.12);color:var(--naranja);}
+.not-cat-ev{background:rgba(192,57,43,.12);color:#c0392b;}
+.not-cat-mundo{background:rgba(26,86,168,.12);color:#1a56db;}
+.not-cat-iump{background:rgba(0,31,84,.12);color:var(--az1);}
+.not-card-title{font-size:.88rem;font-weight:700;color:var(--texto);line-height:1.35;margin-bottom:4px;}
+.not-card-desc{font-size:.76rem;color:var(--texto2);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+/* Card footer */
+.not-card-foot{display:flex;justify-content:space-between;align-items:center;padding:7px 12px 9px;border-top:1px solid var(--fondo);}
 .not-card-src-lbl{font-size:.66rem;font-weight:700;color:var(--texto2);}
 .not-card-time{font-size:.66rem;color:var(--texto2);}
+
+/* Shimmer loading skeleton */
+.not-shimmer{height:190px;background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);background-size:200% 100%;animation:not-shimmer 1.4s ease-in-out infinite;border-radius:16px;margin:0 12px 10px;}
+@keyframes not-shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* Modal image/placeholder */
+.not-modal-img{width:100%;max-height:200px;object-fit:cover;display:block;border-radius:0;}
+.not-modal-img-ph{width:100%;height:140px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;}
 
 /* Mural */
 .mcats{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;background:#fff;border-bottom:1px solid var(--borde);position:sticky;top:0;z-index:10;}
@@ -806,12 +846,13 @@ html,body{height:100%;background:#E5E7EB;font-family:var(--font-sans),-apple-sys
 
 <!-- ═══ NOTICIAS ═══ -->
 <div class="sec" id="sec-noticias">
+  <!-- Blue gradient header -->
+  <div class="not-header-bar">
+    <h2>📰 Noticias</h2>
+    <button class="not-refresh" onclick="loadNoticias(true)">↻ Actualizar</button>
+  </div>
   <div class="noticias-sec">
-    <div class="not-header">
-      <h3>📰 Noticias</h3>
-      <button class="not-refresh" onclick="loadNoticias()">↻ Actualizar</button>
-    </div>
-    <!-- Category filters -->
+    <!-- Category filters (sticky) -->
     <div class="not-cats">
       <button class="not-cat on" onclick="filtNot('todos',this)">Todos</button>
       <button class="not-cat" onclick="filtNot('cmvida',this)">📸 CMVida IG</button>
@@ -819,9 +860,8 @@ html,body{height:100%;background:#E5E7EB;font-family:var(--font-sans),-apple-sys
       <button class="not-cat" onclick="filtNot('mundo',this)">🌍 Mundo</button>
       <button class="not-cat" onclick="filtNot('iump',this)">⛪ IUMP</button>
     </div>
-    <!-- Floating cards -->
+    <!-- Cards -->
     <div class="not-cards" id="not-cards-wrap">
-      <!-- Shimmers while loading -->
       <div class="not-shimmer"></div>
       <div class="not-shimmer"></div>
       <div class="not-shimmer"></div>
