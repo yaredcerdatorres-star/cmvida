@@ -1,4 +1,4 @@
-const CACHE = 'cmvida-v2';
+const CACHE = 'cmvida-v3';
 const ASSETS = [
   './CMVidaAppcorrecto.html',
   './manifest.json',
