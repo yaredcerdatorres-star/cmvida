@@ -83,7 +83,7 @@ html,body{height:100%;background:#E5E7EB;font-family:var(--font-sans),-apple-sys
 .spl-addr{font-size:.62rem;color:rgba(255,255,255,.4);margin-top:22px;letter-spacing:.8px;position:relative;z-index:1;}
 
 /* ── CONTENT AREA ── */
-.cnt{flex:1;overflow-y:auto;padding-bottom:80px;}
+.cnt{flex:1;min-height:0;overflow-y:auto;padding-bottom:80px;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;}
 .sec{display:none;}
 .sec.on{display:block;}
 
@@ -569,6 +569,14 @@ html,body{height:100%;background:#E5E7EB;font-family:var(--font-sans),-apple-sys
   .moverlay{align-items:center;}
   .mbox{border-radius:16px;max-width:520px;}
 }
+/* ── IFRAME SCROLL FIX ──
+   Overlays prevent iframes from capturing parent scroll.
+   First tap activates the iframe; parent can scroll when not tapping on it. */
+.iframe-wrap{position:relative;touch-action:pan-y;}
+.iframe-cap{position:absolute;inset:0;z-index:2;cursor:pointer;background:transparent;}
+.iframe-cap.off{display:none;}
+.iframe-cap-hint{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.5);color:#fff;font-size:.62rem;padding:3px 8px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .3s;}
+
 </style>
 </head>
 <body>
@@ -1064,12 +1072,14 @@ html,body{height:100%;background:#E5E7EB;font-family:var(--font-sans),-apple-sys
       <h3 id="hist-titulo">Historia</h3>
       <button class="mclose" onclick="cerrarHistoria()">✕</button>
     </div>
-    <div id="hist-imagen-wrap" style="width:100%;height:180px;overflow:hidden;background:#F3F4F6;position:relative;">
-      <img id="hist-imagen" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.parentElement.style.display='none'">
-      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(0,31,84,.6));"></div>
-      <div style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:2.5rem;" id="hist-emoji">📖</div>
+    <div style="flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;" id="hist-scroll-area">
+      <div id="hist-imagen-wrap" style="width:100%;height:180px;overflow:hidden;background:#F3F4F6;position:relative;flex-shrink:0;">
+        <img id="hist-imagen" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.parentElement.style.display='none'">
+        <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(0,31,84,.6));"></div>
+        <div style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:2.5rem;" id="hist-emoji">📖</div>
+      </div>
+      <div style="padding:16px 16px 28px;font-size:.86rem;line-height:1.9;color:#333;" id="hist-contenido"></div>
     </div>
-    <div style="padding:16px 16px 28px;font-size:.86rem;line-height:1.9;color:#333;" id="hist-contenido"></div>
   </div>
 </div>
 
@@ -1086,7 +1096,8 @@ html,body{height:100%;background:#E5E7EB;font-family:var(--font-sans),-apple-sys
     <p style="font-size:.72rem;color:rgba(255,255,255,.8);line-height:1.4;">Los videos requieren conexión a internet. Funcionan perfectamente cuando la app esté publicada en línea.</p>
   </div>
   <!-- Player principal (cambia al tocar un video) -->
-  <div style="background:#000;width:100%;position:relative;" id="yt-player-container">
+  <div class="iframe-wrap" style="background:#000;width:100%;position:relative;" id="yt-player-container">
+    <div class="iframe-cap" onclick="this.classList.add('off')" title="Toca para interactuar"></div>
     <iframe id="yt-main-iframe"
       width="100%" height="215"
       src="https://www.youtube.com/embed/HTUaxSVvWlg?rel=0"
@@ -1262,7 +1273,8 @@ html,body{height:100%;background:#E5E7EB;font-family:var(--font-sans),-apple-sys
       <p>Alabanza y adoración — Juventud CMVida Linares</p>
     </div>
   </div>
-  <div class="alb-player">
+  <div class="alb-player iframe-wrap">
+    <div class="iframe-cap" onclick="this.classList.add('off')" title="Toca para interactuar"></div>
     <iframe src="https://open.spotify.com/embed/playlist/4Oq0KDbhIkVcJpGb3XvUp9?utm_source=generator&theme=0"
       width="100%" height="420" frameborder="0" allowfullscreen=""
       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
@@ -1640,6 +1652,7 @@ function switchTab(tab){
   if(dl)dl.classList.add('on');
   var mc=document.getElementById('mainCnt');
   if(mc)mc.scrollTop=0;
+  document.querySelectorAll('.iframe-cap').forEach(function(c){c.classList.remove('off');});
   if(tab==='perfil')rPerfil();
   if(tab==='quiz'){document.getElementById('quiz-start-screen').style.display='block';document.getElementById('quiz-question-screen').style.display='none';document.getElementById('quiz-result-screen').style.display='none';initQuizScreen();}
   if(tab==='alertas')rAl();
@@ -3376,7 +3389,7 @@ function abrirHistoria(i) {
   var img = document.getElementById('hist-imagen');
   if(img && h.imagen){ img.src = h.imagen; img.parentElement.style.display='block'; }
   document.getElementById('mod-historia').classList.add('on');
-  document.getElementById('mod-historia').querySelector('.mbox').scrollTop = 0;
+  var hsa=document.getElementById('hist-scroll-area');if(hsa)hsa.scrollTop=0;
   document.body.style.overflow = 'hidden';
 }
 function cerrarHistoria() {
